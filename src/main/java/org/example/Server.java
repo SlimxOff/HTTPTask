@@ -17,7 +17,7 @@ public class Server {
 
     public Server(int port) {
         this.port = port;
-        this.validPaths = List.of("/index.html", "/spring.svg", "/spring.png", "/resources.html", "/styles.css", "/app.js", "/links.html", "/forms.html", "/classic.html", "/events.html", "/events.js");
+        this.validPaths = List.of("/public/index.html", "/spring.svg", "/spring.png", "/resources.html", "/styles.css", "/app.js", "/links.html", "/forms.html", "/classic.html", "/events.html", "/events.js");
         this.threadPool = Executors.newFixedThreadPool(64);
     }
 
@@ -65,7 +65,7 @@ public class Server {
             final var filePath = Path.of(".", "public", path);
             final var mimeType = Files.probeContentType(filePath);
 
-            if (path.equals("/index.html")) {
+            if (path.equals("/public/index.html")) {
                 final var template = Files.readString(filePath);
                 final var content = template.replace(
                         "{time}",
