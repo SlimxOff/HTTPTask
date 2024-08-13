@@ -3,6 +3,7 @@ package org.example;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -43,14 +44,9 @@ public class Server {
                 final var out = new BufferedOutputStream(socket.getOutputStream());
         ) {
             final var requestLine = in.readLine();
-            final var parts = requestLine.split(" ");
+            final var request = new Request(requestLine);
 
-            if (parts.length != 3) {
-                // just close socket
-                return;
-            }
-
-            final var path = parts[1];
+            final var path = request.getPath();
             if (!validPaths.contains(path)) {
                 out.write((
                         "HTTP/1.1 404 Not Found\r\n" +
@@ -93,7 +89,7 @@ public class Server {
             ).getBytes());
             Files.copy(filePath, out);
             out.flush();
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
     }
